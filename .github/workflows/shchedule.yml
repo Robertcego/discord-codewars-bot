@@ -2,8 +2,8 @@ name: Schedule Bot Check
 
 on:
   schedule:
-    # This runs every 10 minutes, adjust as needed
-    - cron: '*/10 * * * *'
+    # This runs every minute (For testing)
+    - cron: '* * * * *'
 
 jobs:
   call-vercel-endpoint:
