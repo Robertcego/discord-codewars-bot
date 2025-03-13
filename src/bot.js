@@ -2,21 +2,19 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { Client, GatewayIntentBits } from 'discord.js';
-
 import express from 'express';
 import axios from 'axios';
 
 const TOKEN = process.env.BOT_TOKEN;
-console.log(TOKEN)
 const CODEWARS_USERNAME = process.env.CODEWARS_USERNAME;
-const DISCORD_CHANNEL_ID = '1349828243603193927';
+const DISCORD_CHANNEL_ID = process.env.DISCORD_CHANNEL_ID; // Make sure to define this in your .env
 
 const client = new Client({
     intents: [
-        GatewayIntentBits.GuildScheduledEvents,
-        GatewayIntentBits.GuildMessages
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.Guilds
     ]
-})
+});
 
 let lastCompleted = null;
 
@@ -27,9 +25,7 @@ async function checkCodeWars() {
 
         if (data.data.length > 0) {
             const latestChallenge = data.data[0].name;
-            console.log('====================================');
             console.log(`Latest challenge: ${latestChallenge}`);
-            console.log('====================================');
 
             if (latestChallenge !== lastCompleted) {
                 lastCompleted = latestChallenge;
@@ -37,7 +33,7 @@ async function checkCodeWars() {
                 const channel = client.channels.cache.get(DISCORD_CHANNEL_ID);
                 if (channel) {
                     console.log(`✅ Found channel: ${channel.name}`);
-                    channel.send(`🎉 I just completed a CodeWars challenge: **${latestChallenge}**! 🚀`);
+                    channel.send(`${CODEWARS_USERNAME} just completed a CodeWars challenge: **${latestChallenge}**! ✅`);
                 } else {
                     console.log(`❌ Error: Could not find channel with ID ${DISCORD_CHANNEL_ID}`);
                 }
@@ -48,25 +44,20 @@ async function checkCodeWars() {
     }
 }
 
-setInterval(checkCodeWars, 1000);
-
-client.once('ready', () => {
-    console.log('====================================');
-    console.log(`Logged in as ${client.user.tag}`);
-    console.log('====================================');
-    checkCodeWars();
-});
-
-client.login(TOKEN);
-
-// Run the function once immediately after the bot is ready
 client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}`);
+
+    // Check if the bot can access the channel
+    const channel = client.channels.cache.get(DISCORD_CHANNEL_ID);
+    if (channel) {
+        console.log(`✅ Found channel: ${channel.name}`);
+    } else {
+        console.log(`❌ Error: Channel with ID ${DISCORD_CHANNEL_ID} not found.`);
+    }
+
     checkCodeWars(); // Run immediately on startup
 });
 
-// Run the function every 10 minutes
-setInterval(checkCodeWars, 10 * 60 * 1000);
 client.login(TOKEN);
 
 // **Express Server for Manual Trigger**
