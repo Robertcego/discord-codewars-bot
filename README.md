@@ -2,7 +2,7 @@
 
 ## Intention behind this is to keep track of the challenges that we take in the CodeWars platform
 
-- [x] Create a Discord bot
+- [ ] Create a Discord bot
 - [ ] Create a command to get the user's profile
 
 Technologies used:
@@ -11,3 +11,4 @@ Technologies used:
 - CodeWars API
 - node-fetch
 - dotenv
+- Vite
