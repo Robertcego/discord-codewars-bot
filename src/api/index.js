@@ -55,7 +55,9 @@ client.once('ready', () => {
         console.log(`❌ Error: Channel with ID ${DISCORD_CHANNEL_ID} not found.`);
     }
 
-    checkCodeWars(); // Run immediately on startup
+    // Run immediately on startup
+    checkCodeWars(); 
+
 });
 
 client.login(TOKEN);
